@@ -1,0 +1,15 @@
+{% extends 'food/nav.html' %} {% block body %}
+<div
+  class="d-flex justify-content-center align-items-center min-vh-100 bg-light"
+>
+  <div class="card text-center shadow-sm p-4" style="max-width: 20rem">
+    <div class="card-body">
+      <h1 class="card-title text-success mb-3">Success!</h1>
+      <p class="card-text">You have been successfully logged out.</p>
+      <a href="{% url 'index' %}" class="btn btn-primary mt-3 w-100">
+        Go to Home Page
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

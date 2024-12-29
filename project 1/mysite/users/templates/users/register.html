@@ -1,0 +1,31 @@
+{% extends 'food/nav.html' %} {% block body %}
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-sm" style="width: 28rem">
+    <div class="card-body">
+      <h5 class="card-title text-center mb-4">Create an Account</h5>
+
+      <form method="POST" class="p-3">
+        {% csrf_token %}
+
+        <!-- Django Form -->
+        {{ form.as_p }}
+
+        <!-- Submit Button -->
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-success btn-block w-100">
+            Signup
+          </button>
+        </div>
+      </form>
+
+      <!-- Optional Login Link -->
+      <div class="text-center mt-3">
+        <small>
+          Already have an account?
+          <a href="{% url 'login' %}">Login here</a>.
+        </small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

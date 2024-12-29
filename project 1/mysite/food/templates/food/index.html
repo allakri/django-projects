@@ -1,0 +1,77 @@
+{% extends 'food/nav.html' %} {% block body %}
+
+<!-- Header Section -->
+<header class="bg-primary text-white text-center py-5">
+  <div class="container">
+    <h1 class="display-4 fw-bold">Welcome to Food App</h1>
+    <p class="lead">Your Favorite Food, Delivered Fast & Fresh</p>
+    <a href="#download" class="btn btn-danger btn-lg">Order Now</a>
+  </div>
+</header>
+
+<!-- Features Section -->
+<section class="py-5">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow">
+          <div class="card-body">
+            <h3 class="h4">🚀 Fast Delivery</h3>
+            <p>Get your food delivered in minutes, hot and fresh!</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow">
+          <div class="card-body">
+            <h3 class="h4">🍴 Wide Selection</h3>
+            <p>Choose from a variety of restaurants and cuisines.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow">
+          <div class="card-body">
+            <h3 class="h4">💳 Easy Payment</h3>
+            <p>Pay securely using your favorite payment method.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Items Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row g-4">
+      {% for item in item_list %}
+      <div class="col-sm-6 col-md-4">
+        <a
+          href="{% url 'detail' item.id %}"
+          class="text-decoration-none text-dark"
+        >
+          <div class="card shadow-sm h-100">
+            <img
+              src="{{ item.item_image }}"
+              class="card-img-top"
+              alt="{{ item.item_name }}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ item.item_name }}</h5>
+              <p class="card-text">{{ item.item_dis }}</p>
+              <p class="card-text">{{ item.user_name }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="text-primary fw-bold">${{ item.item_price }}</span>
+                <button class="btn btn-outline-primary btn-sm">DETAILS</button>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

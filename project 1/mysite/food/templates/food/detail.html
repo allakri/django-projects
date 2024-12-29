@@ -1,0 +1,35 @@
+{% extends 'food/nav.html' %} {% block body %}
+<a href="{% url 'index' %}" class="btn btn-primary m-3">Back to Menu</a>
+<div class="container mt-5">
+  <a href="{% url 'delete_item' item.id %}" class="btn btn-danger mt-3"
+    >DELETE</a
+  >
+  <div class="row">
+    <div class="col-md-6">
+      <!-- Item Image Section -->
+      {% if object.item_image %}
+      <img
+        src="{{ object.item_image }}"
+        class="card-img-top"
+        alt="{{ object.item_name }}"
+      />
+      {% else %}
+      <p>No image available</p>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <!-- Item Details Section -->
+      <h1 class="display-4">{{ object.item_name }}</h1>
+      <div class="price mb-3">
+        <h3>${{ object.item_price }}</h3>
+      </div>
+      <p class="description">{{ object.item_dis }}</p>
+
+      <!-- Back Button Section -->
+      <a href="#" class="btn btn-primary mt-3">ORDER</a>
+      <a href="{% url 'index' %}" class="btn btn-danger mt-3">CANCEL ORDER</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
