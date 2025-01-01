@@ -78,8 +78,6 @@ def update_item(request,id):
         'item':item,
         'form': form,
     }
-    
-    
     return render(request,'food/create.html',context)
 
 
