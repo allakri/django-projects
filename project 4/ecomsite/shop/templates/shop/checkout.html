@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <!-- Main container -->
+    <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg mt-10 max-w-3xl">
+      <!-- Checkout Header -->
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
+        Checkout
+      </h2>
+
+      <!-- Cart Items List -->
+      <div id="item_list" class="mb-8 space-y-4">
+        <!-- Cart items will be dynamically added here -->
+      </div>
+
+      <!-- Checkout Form -->
+      <form method="POST" class="space-y-6">
+        {% csrf_token %}
+        <input type="hidden" name="items" id="items" />
+        <!-- Name Input -->
+        <div>
+          <label for="name" class="block text-gray-700 font-medium">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value="{{ name }}"
+            required
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Email Input -->
+        <div>
+          <label for="email" class="block text-gray-700 font-medium">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value="{{ email }}"
+            required
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- City Input -->
+        <div>
+          <label for="city" class="block text-gray-700 font-medium">City:</label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            value="{{ city }}"
+            required
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- State Input -->
+        <div>
+          <label for="state" class="block text-gray-700 font-medium">State:</label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            value="{{ state }}"
+            required
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Zip Code Input -->
+        <div>
+          <label for="zip" class="block text-gray-700 font-medium">Zip Code:</label>
+          <input
+            type="text"
+            id="zip"
+            name="zip"
+            value="{{ zip_code }}"
+            required
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Contact Input -->
+        <div>
+          <label for="contact" class="block text-gray-700 font-medium">Contact:</label>
+          <input
+            type="text"
+            id="contact"
+            name="contact"
+            value="{{ contact }}"
+            required
+            class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+        >
+          Place Order
+        </button>
+      </form>
+    </div>
+
+    <!-- JavaScript to dynamically add cart items -->
+    <script>
+      // Fetch the cart from localStorage
+      let cart = JSON.parse(localStorage.getItem("cart")) || {};
+
+      // Loop through the cart and display each item
+      for (let productId in cart) {
+        const item = cart[productId]; // Contains {name: 'Product Name', quantity: X}
+
+        // Create the HTML for each item in the cart
+        let itemString = `
+              <div class='flex justify-between items-center py-2 px-4 border-b'>
+                  <div class='flex items-center'>
+                      <h3 class='font-semibold text-lg text-gray-800'>${item.name}</h3>
+                      <h1 class='text-sm text-gray-600 ml-2'>Quantity: ${item.quantity}</h1>
+                  </div>
+              </div>`;
+
+        // Append the item to the #item_list element
+        $("#item_list").append(itemString);
+      }
+
+      // Update the hidden 'items' input with the cart data
+      $("#items").val(JSON.stringify(cart));
+    </script>
+  </body>
+</html>

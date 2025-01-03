@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product List</title>
+
+    <!-- jQuery CDN -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+      integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+      crossorigin="anonymous"
+    />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100">
+    <nav class="bg-black p-4">
+      <div class="container mx-auto flex items-center">
+        <!-- ShopMate Title -->
+        <h1 class="text-white text-2xl font-bold">ShopMate</h1>
+
+        <!-- Cart with item count -->
+        <div class="relative" style="margin-left: 500px">
+          <button
+            id="cart-icon"
+            class="text-white text-3xl hover:text-gray-400 transform transition duration-300 ease-in-out"
+            onclick="toggleCartTooltip()"
+          >
+            <i class="fas fa-shopping-cart"></i>
+            <span
+              id="cart-count"
+              class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+              >0</span
+            >
+          </button>
+
+          <!-- Cart Tooltip (Initially hidden) -->
+          <div
+            id="cart-tooltip"
+            class="absolute bg-white border border-gray-300 shadow-lg rounded-lg p-4 mt-2 hidden w-56"
+          >
+            <h3 class="font-semibold text-lg mb-2">Cart Items</h3>
+            <div id="cart-items-list"></div>
+
+            <!-- Checkout Button -->
+            <a
+              href="/checkout"
+              class="mt-4 block text-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+            >
+              Checkout
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mx-auto p-8">
+      <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">
+        Our Products
+      </h1>
+
+      <!-- Product Cards Grid -->
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+      >
+        {% for product in product_object %}
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+          <img
+            class="w-full h-64 object-cover"
+            src="{{ product.image }}"
+            alt="{{ product.title }}"
+          />
+          <div class="p-4">
+            <h2 class="text-xl font-semibold text-gray-900">
+              {{ product.title }}
+            </h2>
+
+            <div class="flex items-center justify-between">
+              {% if product.discount %}
+              <span class="text-lg font-semibold text-gray-900"
+                >${{ product.discount }}</span
+              >
+              <span class="text-sm text-red-500 line-through"
+                >${{ product.price }}</span
+              >
+              {% else %}
+              <span class="text-lg font-semibold text-gray-900"
+                >${{ product.price }}</span
+              >
+              {% endif %}
+            </div>
+
+            <div class="mt-4 flex justify-between space-x-2">
+              <a
+                href="/{{ product.id }}"
+                class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                >Details</a
+              >
+
+              <button
+                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                onclick="addToCart({{ product.id }}, '{{ product.title }}')"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Local Storage Cart Logic -->
+    <script type="text/javascript">
+      let cart = JSON.parse(localStorage.getItem("cart")) || {};
+
+      function addToCart(productId, productName) {
+        if (!cart[productId]) {
+          cart[productId] = { name: productName, quantity: 1 };
+        } else {
+          cart[productId].quantity += 1;
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+      }
+
+      function updateCartCount() {
+        const cartCount = Object.keys(cart).length;
+        document.getElementById("cart-count").innerHTML = cartCount;
+      }
+
+      function showCartItems() {
+        const cartItemsList = document.getElementById("cart-items-list");
+        cartItemsList.innerHTML = "";
+
+        if (Object.keys(cart).length > 0) {
+          for (const productId in cart) {
+            const item = cart[productId];
+            const cartItem = document.createElement("div");
+            cartItem.classList.add("text-", "mb-2");
+            cartItem.innerHTML = `${item.name} (x${item.quantity})`;
+            cartItemsList.appendChild(cartItem);
+          }
+        } else {
+          cartItemsList.innerHTML =
+            "<div class='text'>No items in the cart.</div>";
+        }
+      }
+
+      function toggleCartTooltip() {
+        const tooltip = document.getElementById("cart-tooltip");
+        tooltip.classList.toggle("hidden"); // Toggle visibility of the tooltip
+        if (!tooltip.classList.contains("hidden")) {
+          showCartItems();
+        }
+      }
+
+      updateCartCount(); // Initialize the cart count
+    </script>
+  </body>
+</html>
