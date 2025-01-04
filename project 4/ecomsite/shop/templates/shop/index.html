@@ -107,7 +107,7 @@
 
               <button
                 class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                onclick="addToCart({{ product.id }}, '{{ product.title }}')"
+                onclick="addToCart({{ product.id }}, '{{ product.title }}', '{{ product.price }}')"
               >
                 Add to Cart
               </button>
@@ -122,9 +122,9 @@
     <script type="text/javascript">
       let cart = JSON.parse(localStorage.getItem("cart")) || {};
 
-      function addToCart(productId, productName) {
+      function addToCart(productId, productName, productPrice) {
         if (!cart[productId]) {
-          cart[productId] = { name: productName, quantity: 1 };
+          cart[productId] = { name: productName, quantity: 1, price: productPrice };
         } else {
           cart[productId].quantity += 1;
         }
@@ -145,13 +145,13 @@
           for (const productId in cart) {
             const item = cart[productId];
             const cartItem = document.createElement("div");
-            cartItem.classList.add("text-", "mb-2");
-            cartItem.innerHTML = `${item.name} (x${item.quantity})`;
+            cartItem.classList.add("text-gray-600", "mb-2");  // Added appropriate class for text color
+            cartItem.innerHTML = `${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`;
             cartItemsList.appendChild(cartItem);
           }
         } else {
           cartItemsList.innerHTML =
-            "<div class='text'>No items in the cart.</div>";
+            "<div class='text-gray-600'>No items in the cart.</div>";
         }
       }
 

@@ -9,7 +9,9 @@
   </head>
   <body class="bg-gray-100 font-sans">
     <!-- Main container -->
-    <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg mt-10 max-w-3xl">
+    <div
+      class="container mx-auto p-8 bg-white rounded-lg shadow-lg mt-10 max-w-3xl"
+    >
       <!-- Checkout Header -->
       <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">
         Checkout
@@ -26,7 +28,9 @@
         <input type="hidden" name="items" id="items" />
         <!-- Name Input -->
         <div>
-          <label for="name" class="block text-gray-700 font-medium">Name:</label>
+          <label for="name" class="block text-gray-700 font-medium"
+            >Name:</label
+          >
           <input
             type="text"
             id="name"
@@ -39,7 +43,9 @@
 
         <!-- Email Input -->
         <div>
-          <label for="email" class="block text-gray-700 font-medium">Email:</label>
+          <label for="email" class="block text-gray-700 font-medium"
+            >Email:</label
+          >
           <input
             type="email"
             id="email"
@@ -52,7 +58,9 @@
 
         <!-- City Input -->
         <div>
-          <label for="city" class="block text-gray-700 font-medium">City:</label>
+          <label for="city" class="block text-gray-700 font-medium"
+            >City:</label
+          >
           <input
             type="text"
             id="city"
@@ -65,7 +73,9 @@
 
         <!-- State Input -->
         <div>
-          <label for="state" class="block text-gray-700 font-medium">State:</label>
+          <label for="state" class="block text-gray-700 font-medium"
+            >State:</label
+          >
           <input
             type="text"
             id="state"
@@ -78,7 +88,9 @@
 
         <!-- Zip Code Input -->
         <div>
-          <label for="zip" class="block text-gray-700 font-medium">Zip Code:</label>
+          <label for="zip" class="block text-gray-700 font-medium"
+            >Zip Code:</label
+          >
           <input
             type="text"
             id="zip"
@@ -91,7 +103,9 @@
 
         <!-- Contact Input -->
         <div>
-          <label for="contact" class="block text-gray-700 font-medium">Contact:</label>
+          <label for="contact" class="block text-gray-700 font-medium"
+            >Contact:</label
+          >
           <input
             type="text"
             id="contact"
@@ -119,7 +133,10 @@
 
       // Loop through the cart and display each item
       for (let productId in cart) {
-        const item = cart[productId]; // Contains {name: 'Product Name', quantity: X}
+        const item = cart[productId]; // Contains {name: 'Product Name', quantity: X, price: Y}
+
+        // Calculate total price per item
+        const totalPrice = (item.price * item.quantity).toFixed(2);
 
         // Create the HTML for each item in the cart
         let itemString = `
@@ -127,6 +144,7 @@
                   <div class='flex items-center'>
                       <h3 class='font-semibold text-lg text-gray-800'>${item.name}</h3>
                       <h1 class='text-sm text-gray-600 ml-2'>Quantity: ${item.quantity}</h1>
+                      <h1 class='text-sm text-gray-600 ml-2'>Total Price: $${totalPrice}</h1>
                   </div>
               </div>`;
 
