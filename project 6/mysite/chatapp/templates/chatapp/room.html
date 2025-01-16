@@ -1,1 +1,110 @@
-{{chatroom.name}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROOM</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="max-w-xl mx-auto p-4 space-y-4">
+    <h2 class="text-2xl font-semibold text-center text-gray-700">{{ chatroom.name }}</h2>
+  
+    <!-- Chat messages display -->
+    <div id="chat-message" class="bg-gray-100 p-4 rounded-lg overflow-y-auto h-96 space-y-2">
+      {% for chatroom in chatMessages %}
+        <p class="text-sm text-gray-700">
+          <strong class="font-semibold">{{ chatroom.user.username }}:</strong>
+          {{ chatroom.message_content }}
+        </p>
+      {% endfor %}
+    </div>
+  
+    <!-- Message input form -->
+    <form action="" method="post" class="flex items-center space-x-2">
+      <input
+        id="input-message"
+        type="text"
+        name="message"
+        placeholder="Enter Message"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+      <button
+        id="send-button"
+        type="submit"
+        class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      >
+        Send
+      </button>
+    </form>
+  </div>
+  
+  {{ chatroom.slug|json_script:"json-chatroomname" }}
+  {{ request.user.username|json_script:"json-username" }}
+  
+  <script>
+    // Get the chat room name from the hidden JSON script tag
+    const chatRoomName = JSON.parse(
+      document.getElementById("json-chatroomname").textContent
+    );
+    const username = JSON.parse(
+      document.getElementById("json-username").textContent
+    );
+  
+    // Use the correct WebSocket protocol (ws:// or wss:// depending on the page protocol)
+    const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const chatSocket = new WebSocket(
+      protocol + window.location.host + "/ws/" + chatRoomName + "/"
+    );
+  
+    chatSocket.onmessage = function (e) {
+      const data = JSON.parse(e.data);
+      if (data.message) {
+        console.log("Message received:", data.message);
+        let html = `
+          <p class="text-sm text-gray-700">
+            <strong class="font-semibold">${data.username}:</strong> ${data.message}
+          </p>
+        `;
+        document.getElementById("chat-message").innerHTML += html;
+        // Scroll to the latest message
+        const chatMessagesDiv = document.getElementById("chat-message");
+        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+      } else {
+        alert("This message was empty");
+      }
+    };
+  
+    chatSocket.onclose = function (e) {
+      console.log("Socket is closed");
+    };
+  
+    document.getElementById("send-button").onclick = function (e) {
+      e.preventDefault(); // Prevent form submission (default behavior)
+  
+      const messageInput = document.getElementById("input-message");
+      const message = messageInput.value;
+  
+      if (message.trim() === "") {
+        alert("Please enter a message");
+        return; // Do not send if message is empty
+      }
+  
+      console.log("Sending message:", message);
+  
+      // Send the message to the WebSocket
+      chatSocket.send(
+        JSON.stringify({
+          message: message,
+          username: username,
+          room: chatRoomName,
+        })
+      );
+  
+      // Clear the input field
+      messageInput.value = "";
+    };
+  </script>
+  
+</body>
+</html>
